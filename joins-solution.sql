@@ -1,3 +1,4 @@
+-------------BASE GOALS --------------
 -- Get all customers and their addresses.
 SELECT * FROM "customers"
 JOIN "addresses" ON "addresses".customer_id = "customers".id;
@@ -40,3 +41,25 @@ SELECT count("products") FROM "products";
 SELECT sum("warehouse_product".on_hand) FROM "warehouse_product"
 JOIN "products" ON "warehouse_product".product_id = "products".id
 WHERE "products".description = 'diet pepsi';
+
+
+
+-------- STRETCH GOALS -------------
+-- How much was the total cost for each order?
+SELECT "orders".id, sum("products".unit_price) FROM "orders"
+JOIN "line_items" ON "line_items".order_id = "orders".id
+JOIN "products" ON "line_items".product_id = "products".id
+GROUP BY "orders".id;
+
+-- How much has each customer spent in total?
+SELECT "customers".first_name, sum("products".unit_price) FROM "orders"
+JOIN "line_items" ON "line_items".order_id = "orders".id
+JOIN "products" ON "line_items".product_id = "products".id
+JOIN "addresses" ON "orders".address_id = "addresses".id
+JOIN "customers" ON "addresses".customer_id = "customers".id
+GROUP BY "customers".first_name;
+
+-- How much has each customer spent in total? 
+-- Customers who have spent $0 should still show up in the table. 
+-- It should say 0, not NULL (research coalesce).
+-- -- no
